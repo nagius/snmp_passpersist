@@ -7,6 +7,7 @@ setup(name='snmp_passpersist',
 	license='GPLv3',
 	description='SNMP passpersist backend for Net-SNMP',
 	author='Nicolas Agius',
+	url='http://github.com/nagius/snmp_passpersist',
 	author_email='nagius@astek.fr',
 	py_modules=['snmp_passpersist']
 )
