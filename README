@@ -1,6 +1,6 @@
 This module is a SNMP passpersist backend for Net-SNMP.
 
-The snmp_passpersist.PassPersist present a convenient way to creare a MIB subtree and expose it to snmp via it's passpersist protocol.
+The snmp_passpersist.PassPersist class present a convenient way to creare a MIB subtree and expose it to snmp via it's passpersist protocol.
 Two thread are used, one for talking with snmpd and a second that trigger the update process at a fixed interval.
 
 The keyword 'DUMP' has been added to the protocol for testing purpose.
