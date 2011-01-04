@@ -35,7 +35,7 @@ __all__ = [ "encode", "start", "add_oid_entry", "add_int", "add_str", "add_cnt" 
 
 __author__ = "Nicolas Agius"
 __license__ = "GPL"
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 __email__ = "nagius@astek.fr"
 __status__ = "Production"
 
@@ -108,6 +108,17 @@ class PassPersist:
 		try:
 			return self.get(self.data_idx[self.data_idx.index(oid)+1])
 		except (IndexError, ValueError):
+			# Try to match partial oid
+			for real_oid in self.data_idx:
+				if real_oid.startswith(oid):
+					return self.get(real_oid)
+			return "NONE"
+
+	def get_first(self):
+		"""Return snmp value for the first OID."""
+		try:
+			return self.get(self.data_idx[0])
+		except (IndexError, ValueError):
 			return "NONE"
 
 	def cut_oid(self,full_oid):
@@ -119,7 +130,7 @@ class PassPersist:
 		>>> pp.cut_oid(".1.3.6.1.3.53.8.28.12")
 		'28.12'
 		"""
-		if not full_oid.startswith(self.base_oid):
+		if not full_oid.startswith(self.base_oid.rstrip('.')):
 			return None 
 		else:
 			return full_oid[len(self.base_oid):]
@@ -158,6 +169,9 @@ class PassPersist:
 			oid = self.cut_oid(sys.stdin.readline().strip())
 			if oid is None:
 				print "NONE"
+			elif oid == "":
+				# Fallback to the first entry
+				print self.get_first()
 			else:
 				print self.get_next(oid)
 		elif 'get' in line:
@@ -207,6 +221,7 @@ class PassPersist:
 
 		# First load
 		self.update()
+		self.data_idx = sorted(self.data.keys())
 
 		# Start updater thread
 		up = threading.Thread(None,self.main_update,"Updater")
