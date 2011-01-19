@@ -106,6 +106,8 @@ class PassPersist:
 	def get_next(self,oid):
 		"""Return snmp value for the next OID."""
 		try:
+			if self.data_idx.index(oid)+1 >= len(self.data_idx):
+				return "NONE" # End of MIB
 			return self.get(self.data_idx[self.data_idx.index(oid)+1])
 		except (IndexError, ValueError):
 			# Try to match partial oid
