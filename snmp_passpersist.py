@@ -106,15 +106,15 @@ class PassPersist:
 	def get_next(self,oid):
 		"""Return snmp value for the next OID."""
 		try:
-			if self.data_idx.index(oid)+1 >= len(self.data_idx):
-				return "NONE" # End of MIB
 			return self.get(self.data_idx[self.data_idx.index(oid)+1])
-		except (IndexError, ValueError):
-			# Try to match partial oid
+		except ValueError:
+			# Not found: try to match partial oid
 			for real_oid in self.data_idx:
 				if real_oid.startswith(oid):
 					return self.get(real_oid)
-			return "NONE"
+			return "NONE" # Unknown OID
+		except IndexError:
+			return "NONE" # End of MIB
 
 	def get_first(self):
 		"""Return snmp value for the first OID."""
