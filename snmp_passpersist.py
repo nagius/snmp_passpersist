@@ -35,7 +35,7 @@ __all__ = [ "encode", "start", "add_oid_entry", "add_int", "add_str", "add_cnt" 
 
 __author__ = "Nicolas Agius"
 __license__ = "GPL"
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 __email__ = "nagius@astek.fr"
 __status__ = "Production"
 
@@ -151,7 +151,8 @@ class PassPersist:
 
 	def add_cnt(self,oid,value):
 		"""Short helper to add a counter value to the MIB subtree."""
-		self.add_oid_entry(oid,'Counter32',value)
+		# Truncate integer to 32bits max
+		self.add_oid_entry(oid,'Counter32',int(value)%4294967296) 
 
 	def add_gau(self,oid,value):
 		"""Short helper to add a gauge value to the MIB subtree."""
