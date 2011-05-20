@@ -29,7 +29,7 @@ STDOUT by use of the -u switch in the shebang line.
 All the methods are in the PassPersist class.
 """
 
-import sys, time, threading
+import sys, time, threading, os
 
 __all__ = [ "encode", "start", "add_oid_entry", "add_int", "add_str", "add_cnt" ]
 
@@ -198,6 +198,9 @@ class PassPersist:
 		Main function called by the updater thread.
 		Direct call is unnecessary.
 		"""
+	
+		# Renice updater thread to limit overload
+		os.nice(1)
 
 		try:
 			while True:
