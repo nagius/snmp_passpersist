@@ -35,7 +35,7 @@ __all__ = [ "encode", "start", "add_oid_entry", "add_int", "add_str", "add_cnt" 
 
 __author__ = "Nicolas Agius"
 __license__ = "GPL"
-__version__ = "1.0.2"
+__version__ = "1.1.0"
 __email__ = "nagius@astek.fr"
 __status__ = "Production"
 
@@ -86,6 +86,7 @@ class PassPersist:
 
 		self.data=dict()
 		self.data_idx=list()
+		self.pending=dict()
 		if not base_oid.endswith("."):
 			base_oid += "."
 		self.base_oid=base_oid
@@ -139,7 +140,7 @@ class PassPersist:
 
 	def add_oid_entry(self, oid, type, value):
 		"""General function to add an oid entry to the MIB subtree."""
-		self.data[oid]={'type': str(type), 'value': str(value)}
+		self.pending[oid]={'type': str(type), 'value': str(value)}
 
 	def add_int(self,oid,value):
 		"""Short helper to add an integer value to the MIB subtree."""
@@ -193,6 +194,20 @@ class PassPersist:
 		else:
 			print "NONE"
 
+	def commit(self):
+		"""
+		Commit change made by the add_* methods. 
+		All previous values with no update will be lost.
+		This method is automatically called by the updater thread.
+		"""
+
+		# Commit new data
+		self.data=self.pending
+		self.pending=dict()
+
+		# Generate index 
+		self.data_idx = sorted(self.data.keys())
+
 	def main_update(self):
 		"""
 		Main function called by the updater thread.
@@ -209,8 +224,8 @@ class PassPersist:
 				# Update data with user's defined function
 				self.update()
 
-				# Generate index 
-				self.data_idx = sorted(self.data.keys())
+				# Commit change
+				self.commit()
 
 		except Exception,e:
 			self.error=e
@@ -227,7 +242,7 @@ class PassPersist:
 
 		# First load
 		self.update()
-		self.data_idx = sorted(self.data.keys())
+		self.commit()
 
 		# Start updater thread
 		up = threading.Thread(None,self.main_update,"Updater")
