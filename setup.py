@@ -3,7 +3,7 @@
 from setuptools import setup
 
 setup(name='snmp_passpersist',
-	version='1.0',
+	version='1.1',
 	license='GPLv3',
 	description='SNMP passpersist backend for Net-SNMP',
 	author='Nicolas Agius',
