@@ -35,7 +35,7 @@ __all__ = [ "encode", "start", "add_oid_entry", "add_int", "add_str", "add_cnt" 
 
 __author__ = "Nicolas Agius"
 __license__ = "GPL"
-__version__ = "1.1.0"
+__version__ = "1.2.0"
 __email__ = "nagius@astek.fr"
 __status__ = "Production"
 
@@ -216,15 +216,28 @@ class PassPersist:
 	
 		# Renice updater thread to limit overload
 		os.nice(1)
+		time.sleep(self.refresh)
 
 		try:
 			while True:
-				time.sleep(self.refresh)
+				# We pick a timestamp to take in account the time used by update() 
+				timestamp=time.time()
 
 				# Update data with user's defined function
 				self.update()
 
-				# Commit change
+				# We use this trick because we cannot use signals in a backoffice threads
+				# and alarm() mess up with readline() in the main thread.
+				delay=(timestamp+self.refresh)-time.time()
+				if delay > 0:
+					if delay > self.refresh:
+						time.sleep(self.refresh)
+					else:
+						time.sleep(delay)
+
+				# Commit change exactly every 'refresh' seconds, whatever update() takes long.
+				# Commited values are a bit old, but for RRD, punctuals values 
+				# are better than fresh-but-not-time-constants values.
 				self.commit()
 
 		except Exception,e:
