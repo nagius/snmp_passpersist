@@ -150,10 +150,15 @@ class PassPersist:
 		"""Short helper to add a string value to the MIB subtree."""
 		self.add_oid_entry(oid,'STRING',value)
 
-	def add_cnt(self,oid,value):
-		"""Short helper to add a counter value to the MIB subtree."""
+	def add_cnt_32bit(self,oid,value):
+		"""Short helper to add a 32 bit counter value to the MIB subtree."""
 		# Truncate integer to 32bits max
 		self.add_oid_entry(oid,'Counter32',int(value)%4294967296) 
+
+	def add_cnt_64bit(self,oid,value):
+		"""Short helper to add a 64 bit counter value to the MIB subtree."""
+		# Truncate integer to 64bits max
+		self.add_oid_entry(oid,'Counter64',int(value)%18446744073709551615) 
 
 	def add_gau(self,oid,value):
 		"""Short helper to add a gauge value to the MIB subtree."""
