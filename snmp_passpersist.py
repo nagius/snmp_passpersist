@@ -211,7 +211,7 @@ class PassPersist:
 		self.pending=dict()
 
 		# Generate index 
-		self.data_idx = sorted(self.data.keys())
+		self.data_idx = sorted(self.data.keys(), key=lambda k: tuple(int(part) for part in k.split('.')))
 
 	def main_update(self):
 		"""
