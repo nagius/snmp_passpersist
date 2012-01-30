@@ -15,7 +15,7 @@ setup(
 	long_description=read('README'),
 	keywords="snmp net-snmp",
 	author='Nicolas Agius',
-	author_email='nagius@astek.fr',
+	author_email='nicolas.agius@lps-it.fr',
 	url='http://github.com/nagius/snmp_passpersist',
 	py_modules=['snmp_passpersist'],
 	classifiers=[
