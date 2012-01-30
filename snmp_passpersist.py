@@ -1,4 +1,4 @@
-#!/usr/bin/python -u
+#!/usr/bin/env python -u
 
 # snmp_passpersist.py - SNMP passPersist bakend for Net-SNMP
 # Copyleft 2010 - Nicolas AGIUS <nagius@astek.fr>
