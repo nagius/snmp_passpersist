@@ -35,7 +35,7 @@ __all__ = [ "encode", "start", "add_oid_entry", "add_int", "add_str", "add_cnt_3
 
 __author__ = "Nicolas Agius"
 __license__ = "GPL"
-__version__ = "1.2.1"
+__version__ = "1.2.2"
 __email__ = "nicolas.agius@lps-it.fr"
 __status__ = "Production"
 
