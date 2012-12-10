@@ -87,6 +87,7 @@ class PassPersist:
 		self.data=dict()
 		self.data_idx=list()
 		self.pending=dict()
+		self.lock=threading.RLock()
 		if not base_oid.endswith("."):
 			base_oid += "."
 		self.base_oid=base_oid
@@ -99,30 +100,42 @@ class PassPersist:
 
 	def get(self,oid):
 		"""Return snmp value for the given OID."""
-		if oid not in self.data:
-			return "NONE"
-		else:
-			return self.base_oid + oid + '\n' + self.data[oid]['type'] + '\n' +	str(self.data[oid]['value'])
+		try:
+			self.lock.acquire()
+			if oid not in self.data:
+				return "NONE"
+			else:
+				return self.base_oid + oid + '\n' + self.data[oid]['type'] + '\n' +	str(self.data[oid]['value'])
+		finally:
+			self.lock.release()
 
 	def get_next(self,oid):
 		"""Return snmp value for the next OID."""
-		try:
-			return self.get(self.data_idx[self.data_idx.index(oid)+1])
-		except ValueError:
-			# Not found: try to match partial oid
-			for real_oid in self.data_idx:
-				if real_oid.startswith(oid):
-					return self.get(real_oid)
-			return "NONE" # Unknown OID
-		except IndexError:
-			return "NONE" # End of MIB
+		try: # Nested try..except because of Python 2.4
+			self.lock.acquire()
+			try:
+				return self.get(self.data_idx[self.data_idx.index(oid)+1])
+			except ValueError:
+				# Not found: try to match partial oid
+				for real_oid in self.data_idx:
+					if real_oid.startswith(oid):
+						return self.get(real_oid)
+				return "NONE" # Unknown OID
+			except IndexError:
+				return "NONE" # End of MIB
+		finally:
+			self.lock.release()
 
 	def get_first(self):
 		"""Return snmp value for the first OID."""
-		try:
-			return self.get(self.data_idx[0])
-		except (IndexError, ValueError):
-			return "NONE"
+		try: # Nested try..except because of Python 2.4
+			self.lock.acquire()
+			try:
+				return self.get(self.data_idx[0])
+			except (IndexError, ValueError):
+				return "NONE"
+		finally:
+			self.lock.release()
 
 	def cut_oid(self,full_oid):
 		"""
@@ -207,11 +220,15 @@ class PassPersist:
 		"""
 
 		# Commit new data
-		self.data=self.pending
-		self.pending=dict()
+		try:
+			self.lock.acquire()
+			self.data=self.pending
+			self.pending=dict()
 
-		# Generate index 
-		self.data_idx = sorted(self.data.keys(), key=lambda k: tuple(int(part) for part in k.split('.')))
+			# Generate index 
+			self.data_idx = sorted(self.data.keys(), key=lambda k: tuple(int(part) for part in k.split('.')))
+		finally:
+			self.lock.release()
 
 	def main_update(self):
 		"""
