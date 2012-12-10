@@ -1,7 +1,7 @@
-#!/usr/bin/env python -u
+# -*- coding:Utf-8 -*-
 
 # snmp_passpersist.py - SNMP passPersist backend for Net-SNMP
-# Copyleft 2010 - Nicolas AGIUS <nicolas.agius@lps-it.fr>
+# Copyleft 2010-2012 - Nicolas AGIUS <nicolas.agius@lps-it.fr>
 
 ###########################################################################
 #
