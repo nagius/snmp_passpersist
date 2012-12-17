@@ -219,14 +219,16 @@ class PassPersist:
 		This method is automatically called by the updater thread.
 		"""
 
+		# Generate index before acquiring lock to keep locked section fast
+		# Works because this thread is the only writer of self.pending
+		pending_idx = sorted(self.pending.keys(), key=lambda k: tuple(int(part) for part in k.split('.')))
+
 		# Commit new data
 		try:
 			self.lock.acquire()
 			self.data=self.pending
 			self.pending=dict()
-
-			# Generate index 
-			self.data_idx = sorted(self.data.keys(), key=lambda k: tuple(int(part) for part in k.split('.')))
+			self.data_idx = pending_idx
 		finally:
 			self.lock.release()
 
