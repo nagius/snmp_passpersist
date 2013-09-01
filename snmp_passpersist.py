@@ -1,7 +1,7 @@
 # -*- coding:Utf-8 -*-
 
 # snmp_passpersist.py - SNMP passPersist backend for Net-SNMP
-# Copyleft 2010-2012 - Nicolas AGIUS <nicolas.agius@lps-it.fr>
+# Copyleft 2010-2013 - Nicolas AGIUS <nicolas.agius@lps-it.fr>
 
 ###########################################################################
 #
@@ -35,7 +35,7 @@ __all__ = [ "encode", "start", "add_oid_entry", "add_int", "add_str", "add_cnt_3
 
 __author__ = "Nicolas Agius"
 __license__ = "GPL"
-__version__ = "1.2.2"
+__version__ = "1.2.3"
 __email__ = "nicolas.agius@lps-it.fr"
 __status__ = "Production"
 
