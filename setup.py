@@ -8,7 +8,7 @@ def read(fname):
 	return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(
-	name='snmp_passpersist',
+	name='snmp-passpersist',
 	version='1.2.3',
 	license='GPLv3',
 	description="""SNMP passpersist backend for Net-SNMP""",
