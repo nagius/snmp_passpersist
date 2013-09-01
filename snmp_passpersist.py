@@ -114,6 +114,9 @@ class PassPersist:
 		try: # Nested try..except because of Python 2.4
 			self.lock.acquire()
 			try:
+				# remove trailing zeroes from the oid
+				while len(oid) > 0 and oid[-2:] == ".0" and oid not in self.data:
+					oid = oid[:-2];	 
 				return self.get(self.data_idx[self.data_idx.index(oid)+1])
 			except ValueError:
 				# Not found: try to match partial oid
