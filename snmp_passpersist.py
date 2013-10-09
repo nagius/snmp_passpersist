@@ -1,4 +1,4 @@
-# -*- coding:Utf-8 -*-
+# -*- coding:utf-8 -*-
 
 # snmp_passpersist.py - SNMP passPersist backend for Net-SNMP
 # Copyleft 2010-2013 - Nicolas AGIUS <nicolas.agius@lps-it.fr>
@@ -21,9 +21,9 @@
 ###########################################################################
 
 """
-This 'snmp_passpersist' module is a python backend for snmp's "pass_persist" function. 
+This 'snmp_passpersist' module is a python backend for snmp's "pass_persist" function.
 
-It is critical that the python interpreter be invoked with unbuffered STDIN and 
+It is critical that the python interpreter be invoked with unbuffered STDIN and
 STDOUT by use of the -u switch in the shebang line.
 
 All the methods are in the PassPersist class.
@@ -39,6 +39,40 @@ __version__ = "1.2.3"
 __email__ = "nicolas.agius@lps-it.fr"
 __status__ = "Production"
 
+
+class Error(object):
+	"""
+	SET command requests errors.
+	As listed in the man snmpd.conf(5) page
+    """
+	NotWritable = 'not-writable'
+	WrongType = 'wrong-type'
+	WrongValue = 'wrong-value'
+	WrongLength = 'wrong-length'
+	InconsistentValue = 'inconsistent-value'
+ErrorValues = Error.__dict__.values()
+
+
+class Type:
+	"""
+	SET command requests value types.
+	As listed in the man snmpd.conf(5) page
+    """
+	Integer = 'integer'
+	Gauge = 'gauge'
+	Counter = 'counter'
+	TimeTicks = 'timeticks'
+	IPAddress = 'ipaddress'
+	OID = 'objectid'
+	ObjectID = 'objectid'
+	String = 'string'
+TypeValues = Type.__dict__.values()
+
+
+class ResponseError(ValueError):
+	"""
+	Wrong user function 
+	"""
 
 class PassPersist:
 	"""
@@ -58,13 +92,13 @@ class PassPersist:
 	> pp=snmp.PassPersist(".1.3.6.1.3.53.8")
 	> pp.start(update,30) # Every 30s
 
-	With the folowing line in snmpd.conf : 
+	With the folowing line in snmpd.conf :
 
 	pass_persist    .1.3.6.1.3.53.8.0     /path/to/your/script.py
 
 	"""
 
-	@staticmethod	
+	@staticmethod
 	def encode(string):
 		"""
 		Encode the given string as an OID.
@@ -72,7 +106,7 @@ class PassPersist:
 		>>> import snmp_passpersist as snmp
 		>>> snmp.PassPersist.encode("hello")
 		'5.104.101.108.108.111'
-		>>> 
+		>>>
 		"""
 
 		result=".".join([ str(ord(s)) for s in string ])
@@ -91,9 +125,10 @@ class PassPersist:
 		if not base_oid.endswith("."):
 			base_oid += "."
 		self.base_oid=base_oid
+		self.setter = dict()
 
 		# The data structure is a dict that hold the unsorted MIB tree like this :
-		# data = { 
+		# data = {
 		#	'1.1': { 'type':'INTEGER', 'value':4 },
 		#	'1.3.2.1':{ 'type':'STRING', 'value':'vm1' }
 		#	}
@@ -116,7 +151,7 @@ class PassPersist:
 			try:
 				# remove trailing zeroes from the oid
 				while len(oid) > 0 and oid[-2:] == ".0" and oid not in self.data:
-					oid = oid[:-2];	 
+					oid = oid[:-2];
 				return self.get(self.data_idx[self.data_idx.index(oid)+1])
 			except ValueError:
 				# Not found: try to match partial oid
@@ -150,7 +185,7 @@ class PassPersist:
 		'28.12'
 		"""
 		if not full_oid.startswith(self.base_oid.rstrip('.')):
-			return None 
+			return None
 		else:
 			return full_oid[len(self.base_oid):]
 
@@ -169,12 +204,12 @@ class PassPersist:
 	def add_cnt_32bit(self,oid,value):
 		"""Short helper to add a 32 bit counter value to the MIB subtree."""
 		# Truncate integer to 32bits max
-		self.add_oid_entry(oid,'Counter32',int(value)%4294967296) 
+		self.add_oid_entry(oid,'Counter32',int(value)%4294967296)
 
 	def add_cnt_64bit(self,oid,value):
 		"""Short helper to add a 64 bit counter value to the MIB subtree."""
 		# Truncate integer to 64bits max
-		self.add_oid_entry(oid,'Counter64',int(value)%18446744073709551615) 
+		self.add_oid_entry(oid,'Counter64',int(value)%18446744073709551615)
 
 	def add_gau(self,oid,value):
 		"""Short helper to add a gauge value to the MIB subtree."""
@@ -182,7 +217,7 @@ class PassPersist:
 
 	def main_passpersist(self):
 		"""
-		Main function that handle SNMP's pass_persist protocol, called by 
+		Main function that handle SNMP's pass_persist protocol, called by
 		the start method.
 		Direct call is unnecessary.
 		"""
@@ -206,9 +241,9 @@ class PassPersist:
 			else:
 				print self.get(oid)
 		elif 'set' in line:
-			oid = sys.stdin.readline()
-			typevalue = sys.stdin.readline()
-			print "not-writable"
+			oid = sys.stdin.readline().strip()
+			typevalue = sys.stdin.readline().strip()
+			self.set(oid, typevalue)
 		elif 'DUMP' in line: # Just for debbuging
 			from pprint import pprint
 			pprint(self.data)
@@ -217,7 +252,7 @@ class PassPersist:
 
 	def commit(self):
 		"""
-		Commit change made by the add_* methods. 
+		Commit change made by the add_* methods.
 		All previous values with no update will be lost.
 		This method is automatically called by the updater thread.
 		"""
@@ -240,14 +275,13 @@ class PassPersist:
 		Main function called by the updater thread.
 		Direct call is unnecessary.
 		"""
-	
 		# Renice updater thread to limit overload
 		os.nice(1)
 		time.sleep(self.refresh)
 
 		try:
 			while True:
-				# We pick a timestamp to take in account the time used by update() 
+				# We pick a timestamp to take in account the time used by update()
 				timestamp=time.time()
 
 				# Update data with user's defined function
@@ -263,13 +297,55 @@ class PassPersist:
 						time.sleep(delay)
 
 				# Commit change exactly every 'refresh' seconds, whatever update() takes long.
-				# Commited values are a bit old, but for RRD, punctuals values 
+				# Commited values are a bit old, but for RRD, punctuals values
 				# are better than fresh-but-not-time-constants values.
 				self.commit()
 
 		except Exception,e:
 			self.error=e
 			raise
+
+	def getSetter(self, oid):
+		"""
+		Retrieve the nearest parent setter function for an OID
+		"""
+		if hasattr(self.setter, oid):
+			return self.setter[oid]
+		parents = [ poid for poid in self.setter.keys() if oid.startswith(poid) ]
+		if parents:
+			return self.setter[max(parents)]
+		return self.default_setter
+	
+	def registerSetter(self, oid, setter_func):
+		"""
+		Set reference to an user defined function for deal with set commands.
+		The user function receives the OID, type (see Type class) and value
+        and must return a true value on succes or one of errors in Error class
+		"""
+		self.setter[oid] = setter_func
+
+	def default_setter(self, oid, _type, value):
+		return Error.NotWritable
+
+	def set(self, oid, typevalue):
+		"""
+		Call the default or user setter function if avaiable 
+		"""
+		success = False
+		type_ = typevalue.split()[0]
+		value = typevalue.lstrip(type_).strip().strip('"')
+		ret_value = self.getSetter(oid)(oid, type_, value)
+		if ret_value:
+			if ret_value in ErrorValues or ret_value == 'DONE':
+				print ret_value
+			elif ret_value == True:
+				print 'DONE'
+			elif ret_value == False:
+				print Error.NotWritable
+			else:
+				raise RuntimeError("wrong return value: %s" % str(ret_value))
+		else:	
+			print Error.NotWritable
 
 	def start(self, user_func, refresh):
 		"""
