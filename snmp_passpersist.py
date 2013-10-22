@@ -44,7 +44,7 @@ class Error(object):
 	"""
 	SET command requests errors.
 	As listed in the man snmpd.conf(5) page
-    """
+	"""
 	NotWritable = 'not-writable'
 	WrongType = 'wrong-type'
 	WrongValue = 'wrong-value'
@@ -57,7 +57,7 @@ class Type:
 	"""
 	SET command requests value types.
 	As listed in the man snmpd.conf(5) page
-    """
+	"""
 	Integer = 'integer'
 	Gauge = 'gauge'
 	Counter = 'counter'
@@ -320,7 +320,7 @@ class PassPersist:
 		"""
 		Set reference to an user defined function for deal with set commands.
 		The user function receives the OID, type (see Type class) and value
-        and must return a true value on succes or one of errors in Error class
+		and must return a true value on succes or one of errors in Error class
 		"""
 		self.setter[oid] = setter_func
 
@@ -329,7 +329,7 @@ class PassPersist:
 
 	def set(self, oid, typevalue):
 		"""
-		Call the default or user setter function if avaiable 
+		Call the default or user setter function if available 
 		"""
 		success = False
 		type_ = typevalue.split()[0]

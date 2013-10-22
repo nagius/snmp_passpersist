@@ -1,7 +1,0 @@
-Forked from https://github.com/nagius/snmp_passpersist.git
-
-CHANGES
-Robert Oliveira <olivecoder@gmail.com> 
-Implements the "set" command of SNMP pass persist protocol
-Pull request submitted to original project 
-
