@@ -31,7 +31,7 @@ All the methods are in the PassPersist class.
 
 import sys, time, threading, os
 
-__all__ = [ "encode", "start", "add_oid_entry", "add_int", "add_str", "add_cnt_32bit", "add_cnt_64bit" ]
+__all__ = [ "Error", "ErrorValues", "Type", "TypeValues", "PassPersist" ]
 
 __author__ = "Nicolas Agius"
 __license__ = "GPL"
