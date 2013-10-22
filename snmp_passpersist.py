@@ -305,7 +305,7 @@ class PassPersist:
 			self.error=e
 			raise
 
-	def getSetter(self, oid):
+	def get_setter(self, oid):
 		"""
 		Retrieve the nearest parent setter function for an OID
 		"""
@@ -316,7 +316,7 @@ class PassPersist:
 			return self.setter[max(parents)]
 		return self.default_setter
 	
-	def registerSetter(self, oid, setter_func):
+	def register_setter(self, oid, setter_func):
 		"""
 		Set reference to an user defined function for deal with set commands.
 		The user function receives the OID, type (see Type class) and value
@@ -334,7 +334,7 @@ class PassPersist:
 		success = False
 		type_ = typevalue.split()[0]
 		value = typevalue.lstrip(type_).strip().strip('"')
-		ret_value = self.getSetter(oid)(oid, type_, value)
+		ret_value = self.get_setter(oid)(oid, type_, value)
 		if ret_value:
 			if ret_value in ErrorValues or ret_value == 'DONE':
 				print ret_value
