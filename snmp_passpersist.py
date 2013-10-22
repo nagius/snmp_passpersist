@@ -214,7 +214,11 @@ class PassPersist:
 	def add_gau(self,oid,value):
 		"""Short helper to add a gauge value to the MIB subtree."""
 		self.add_oid_entry(oid,'GAUGE',value)
-
+		
+	def add_tt(self,oid,value):	
+		"""Short helper to add a timeticks value to the MIB subtree."""
+		self.add_oid_entry(oid,'TIMETICKS',value)
+		
 	def main_passpersist(self):
 		"""
 		Main function that handle SNMP's pass_persist protocol, called by
