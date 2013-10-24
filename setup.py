@@ -9,7 +9,7 @@ def read(fname):
 
 setup(
 	name='snmp_passpersist',
-	version='1.2.3',
+	version='1.3.0',
 	license='GPLv3',
 	description="""SNMP passpersist backend for Net-SNMP""",
 	long_description=read('README'),

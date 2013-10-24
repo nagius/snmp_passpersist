@@ -35,7 +35,7 @@ __all__ = [ "Error", "ErrorValues", "Type", "TypeValues", "PassPersist" ]
 
 __author__ = "Nicolas Agius"
 __license__ = "GPL"
-__version__ = "1.2.3"
+__version__ = "1.3.0"
 __email__ = "nicolas.agius@lps-it.fr"
 __status__ = "Production"
 
