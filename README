@@ -22,3 +22,5 @@ pass_persist    .1.3.6.1.3.53.8.0     /path/to/your/script.py
 
 A Real-world example is available here: https://github.com/nagius/cxm/blob/master/misc/snmp_xen.py
 
+Another example that show the usage of the 'set' feature is available in the 'example/' directory.
+
