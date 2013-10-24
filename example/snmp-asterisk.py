@@ -63,7 +63,7 @@ class SipSnmpExt(SnmpExtBase):
         self.settings = settings.Tmip()
         self.assign_oids()
         super(TmipSnmpExt, self).__init__()
-        self.snmp.registerSetter(self.BASE_OID, self.setter)
+        self.snmp.register_setter(self.BASE_OID, self.setter)
 
     def assign_oids(self):
         self.oids = dict()
