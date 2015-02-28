@@ -226,6 +226,8 @@ class PassPersist:
 		Direct call is unnecessary.
 		"""
 		line = sys.stdin.readline().strip()
+		if not line:
+			raise EOFError()
 
 		if 'PING' in line:
 			print "PONG"
@@ -366,6 +368,7 @@ class PassPersist:
 
 		# Start updater thread
 		up = threading.Thread(None,self.main_update,"Updater")
+		up.daemon = True
 		up.start()
 
 		# Main loop
