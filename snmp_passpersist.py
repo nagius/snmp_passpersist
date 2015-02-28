@@ -256,6 +256,8 @@ class PassPersist:
 		else:
 			print "NONE"
 
+		sys.stdout.flush()
+
 	def commit(self):
 		"""
 		Commit change made by the add_* methods.
