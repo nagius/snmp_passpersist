@@ -284,7 +284,10 @@ class PassPersist:
 		Direct call is unnecessary.
 		"""
 		# Renice updater thread to limit overload
-		os.nice(1)
+		try:
+			os.nice(1)
+		except AttributeError as er:
+			pass # os.nice is not available on windows
 		time.sleep(self.refresh)
 
 		try:
