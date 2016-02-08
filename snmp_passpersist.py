@@ -193,6 +193,10 @@ class PassPersist:
 		"""General function to add an oid entry to the MIB subtree."""
 		self.pending[oid]={'type': str(type), 'value': str(value)}
 
+	def add_oid(self,oid,value):
+		"""Short helper to add an object ID to the MIB subtree."""
+		self.add_oid_entry(oid,'OBJECTID',value)
+
 	def add_int(self,oid,value):
 		"""Short helper to add an integer value to the MIB subtree."""
 		self.add_oid_entry(oid,'INTEGER',value)
