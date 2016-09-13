@@ -66,6 +66,7 @@ class Type:
 	OID = 'objectid'
 	ObjectID = 'objectid'
 	String = 'string'
+	Octet = 'octet'
 TypeValues = Type.__dict__.values()
 
 
@@ -126,6 +127,7 @@ class PassPersist:
 			base_oid += "."
 		self.base_oid=base_oid
 		self.setter = dict()
+		self.debug = False
 
 		# The data structure is a dict that hold the unsorted MIB tree like this :
 		# data = {
@@ -191,19 +193,29 @@ class PassPersist:
 
 	def add_oid_entry(self, oid, type, value):
 		"""General function to add an oid entry to the MIB subtree."""
+		if self.debug:
+			print('DEBUG: %s %s %s'%(oid,type,value))
 		self.pending[oid]={'type': str(type), 'value': str(value)}
 
 	def add_oid(self,oid,value):
-		"""Short helper to add an object ID to the MIB subtree."""
+		"""Short helper to add an object ID value to the MIB subtree."""
 		self.add_oid_entry(oid,'OBJECTID',value)
 
 	def add_int(self,oid,value):
 		"""Short helper to add an integer value to the MIB subtree."""
 		self.add_oid_entry(oid,'INTEGER',value)
 
+	def add_oct(self,oid,value):
+		"""Short helper to add an octet value to the MIB subtree."""
+		self.add_oid_entry(oid,'OCTET',value)
+
 	def add_str(self,oid,value):
 		"""Short helper to add a string value to the MIB subtree."""
 		self.add_oid_entry(oid,'STRING',value)
+
+	def add_ip(self,oid,value):
+		"""Short helper to add an IP address value to the MIB subtree."""
+		self.add_oid_entry(oid,'IPADDRESS',value)
 
 	def add_cnt_32bit(self,oid,value):
 		"""Short helper to add a 32 bit counter value to the MIB subtree."""
