@@ -191,49 +191,52 @@ class PassPersist:
 		else:
 			return full_oid[len(self.base_oid):]
 
-	def add_oid_entry(self, oid, type, value):
+	def add_oid_entry(self, oid, type, value, label=None):
 		"""General function to add an oid entry to the MIB subtree."""
 		if self.debug:
-			print('DEBUG: %s %s %s'%(oid,type,value))
-		self.pending[oid]={'type': str(type), 'value': str(value)}
+			print('DEBUG: %s %s %s %s'%(oid,type,value,label))
+		item={'type': str(type), 'value': str(value)}
+		if label is not None:
+		    item['label']=str(label)
+		self.pending[oid]=item
 
-	def add_oid(self,oid,value):
+	def add_oid(self,oid,value,label=None):
 		"""Short helper to add an object ID value to the MIB subtree."""
-		self.add_oid_entry(oid,'OBJECTID',value)
+		self.add_oid_entry(oid,'OBJECTID',value,label=label)
 
-	def add_int(self,oid,value):
+	def add_int(self,oid,value,label=None):
 		"""Short helper to add an integer value to the MIB subtree."""
-		self.add_oid_entry(oid,'INTEGER',value)
+		self.add_oid_entry(oid,'INTEGER',value,label=label)
 
-	def add_oct(self,oid,value):
+	def add_oct(self,oid,value,label=None):
 		"""Short helper to add an octet value to the MIB subtree."""
-		self.add_oid_entry(oid,'OCTET',value)
+		self.add_oid_entry(oid,'OCTET',value,label=label)
 
-	def add_str(self,oid,value):
+	def add_str(self,oid,value,label=None):
 		"""Short helper to add a string value to the MIB subtree."""
-		self.add_oid_entry(oid,'STRING',value)
+		self.add_oid_entry(oid,'STRING',value,label=label)
 
-	def add_ip(self,oid,value):
+	def add_ip(self,oid,value,label=None):
 		"""Short helper to add an IP address value to the MIB subtree."""
-		self.add_oid_entry(oid,'IPADDRESS',value)
+		self.add_oid_entry(oid,'IPADDRESS',value,label=label)
 
-	def add_cnt_32bit(self,oid,value):
+	def add_cnt_32bit(self,oid,value,label=None):
 		"""Short helper to add a 32 bit counter value to the MIB subtree."""
-		# Truncate integer to 32bits max
-		self.add_oid_entry(oid,'Counter32',int(value)%4294967296)
+		# Truncate integer to 32bits ma,x
+		self.add_oid_entry(oid,'Counter32',int(value)%4294967296,label=label)
 
-	def add_cnt_64bit(self,oid,value):
+	def add_cnt_64bit(self,oid,value,label=None):
 		"""Short helper to add a 64 bit counter value to the MIB subtree."""
-		# Truncate integer to 64bits max
-		self.add_oid_entry(oid,'Counter64',int(value)%18446744073709551615)
+		# Truncate integer to 64bits ma,x
+		self.add_oid_entry(oid,'Counter64',int(value)%18446744073709551615,label=label)
 
-	def add_gau(self,oid,value):
+	def add_gau(self,oid,value,label=None):
 		"""Short helper to add a gauge value to the MIB subtree."""
-		self.add_oid_entry(oid,'GAUGE',value)
+		self.add_oid_entry(oid,'GAUGE',value,label=label)
 		
-	def add_tt(self,oid,value):	
+	def add_tt(self,oid,value,label=None):	
 		"""Short helper to add a timeticks value to the MIB subtree."""
-		self.add_oid_entry(oid,'TIMETICKS',value)
+		self.add_oid_entry(oid,'TIMETICKS',value,label=label)
 		
 	def main_passpersist(self):
 		"""
