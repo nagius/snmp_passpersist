@@ -6,6 +6,8 @@
 Configure Asterisk SIP settings using SNMP get/set commands
 Author: Robert Oliveira <olivecoder@gmail.com>
 '''
+from builtins import str
+from builtins import object
 
 ###########################################################################
 #
@@ -83,7 +85,7 @@ class SipSnmpExt(SnmpExtBase):
         if self.settings.updateFromFile():
             syslog.syslog(syslog.LOG_INFO, 'SipSnmp: reading settings')
             self.assign_oids()
-        for oid, setting in self.oids.items():
+        for oid, setting in list(self.oids.items()):
             section, attr_name = setting
             attr_value = self.settings.get(section, attr_name)
             self.snmp.add_str(self.getNameOid(oid),  attr_name)

@@ -5,6 +5,9 @@
 Recover settings from a standard ini/conf file
 Author: Robert Oliveira <olivecoder@gmail.com>
 '''
+from future import standard_library
+standard_library.install_aliases()
+from builtins import object
 
 ###########################################################################
 #
@@ -23,13 +26,13 @@ Author: Robert Oliveira <olivecoder@gmail.com>
 #
 ###########################################################################
 
-import ConfigParser
+import configparser
 import tempfile
 import os
 import shutil
 
 
-class Settings():
+class Settings(object):
     '''Base class to read and write ini files
 
     define FNAME in child class
@@ -45,7 +48,7 @@ class Settings():
         self.read()
 
     def read(self):
-        self.config = ConfigParser.ConfigParser()
+        self.config = configparser.ConfigParser()
         self.config.read(self.file_name)
 
     def updateFromFile(self):
