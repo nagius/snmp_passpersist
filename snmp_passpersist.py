@@ -28,6 +28,9 @@ STDOUT by use of the -u switch in the shebang line.
 
 All the methods are in the PassPersist class.
 """
+from __future__ import print_function
+from builtins import str
+from builtins import object
 
 import sys, time, threading, os
 
@@ -50,10 +53,10 @@ class Error(object):
 	WrongValue = 'wrong-value'
 	WrongLength = 'wrong-length'
 	InconsistentValue = 'inconsistent-value'
-ErrorValues = Error.__dict__.values()
+ErrorValues = list(Error.__dict__.values())
 
 
-class Type:
+class Type(object):
 	"""
 	SET command requests value types.
 	As listed in the man snmpd.conf(5) page
@@ -67,7 +70,7 @@ class Type:
 	ObjectID = 'objectid'
 	String = 'string'
 	Octet = 'octet'
-TypeValues = Type.__dict__.values()
+TypeValues = list(Type.__dict__.values())
 
 
 class ResponseError(ValueError):
@@ -75,7 +78,7 @@ class ResponseError(ValueError):
 	Wrong user function 
 	"""
 
-class PassPersist:
+class PassPersist(object):
 	"""
 	This class present a convenient way to creare a MIB subtree and expose it to snmp via it's passpersist protocol.
 	Two thread are used, one for talking with snmpd and a second that trigger the update process at a fixed interval.
@@ -249,22 +252,22 @@ class PassPersist:
 			raise EOFError()
 
 		if 'PING' in line:
-			print "PONG"
+			print("PONG")
 		elif 'getnext' in line:
 			oid = self.cut_oid(sys.stdin.readline().strip())
 			if oid is None:
-				print "NONE"
+				print("NONE")
 			elif oid == "":
 				# Fallback to the first entry
-				print self.get_first()
+				print(self.get_first())
 			else:
-				print self.get_next(oid)
+				print(self.get_next(oid))
 		elif 'get' in line:
 			oid = self.cut_oid(sys.stdin.readline().strip())
 			if oid is None:
-				print "NONE"
+				print("NONE")
 			else:
-				print self.get(oid)
+				print(self.get(oid))
 		elif 'set' in line:
 			oid = sys.stdin.readline().strip()
 			typevalue = sys.stdin.readline().strip()
@@ -273,7 +276,7 @@ class PassPersist:
 			from pprint import pprint
 			pprint(self.data)
 		else:
-			print "NONE"
+			print("NONE")
 
 		sys.stdout.flush()
 
@@ -286,7 +289,7 @@ class PassPersist:
 
 		# Generate index before acquiring lock to keep locked section fast
 		# Works because this thread is the only writer of self.pending
-		pending_idx = sorted(self.pending.keys(), key=lambda k: tuple(int(part) for part in k.split('.')))
+		pending_idx = sorted(list(self.pending.keys()), key=lambda k: tuple(int(part) for part in k.split('.')))
 
 		# Commit new data
 		try:
@@ -331,7 +334,7 @@ class PassPersist:
 				# are better than fresh-but-not-time-constants values.
 				self.commit()
 
-		except Exception,e:
+		except Exception as e:
 			self.error=e
 			raise
 
@@ -341,7 +344,7 @@ class PassPersist:
 		"""
 		if hasattr(self.setter, oid):
 			return self.setter[oid]
-		parents = [ poid for poid in self.setter.keys() if oid.startswith(poid) ]
+		parents = [ poid for poid in list(self.setter.keys()) if oid.startswith(poid) ]
 		if parents:
 			return self.setter[max(parents)]
 		return self.default_setter
@@ -367,15 +370,15 @@ class PassPersist:
 		ret_value = self.get_setter(oid)(oid, type_, value)
 		if ret_value:
 			if ret_value in ErrorValues or ret_value == 'DONE':
-				print ret_value
+				print(ret_value)
 			elif ret_value == True:
-				print 'DONE'
+				print('DONE')
 			elif ret_value == False:
-				print Error.NotWritable
+				print(Error.NotWritable)
 			else:
 				raise RuntimeError("wrong return value: %s" % str(ret_value))
 		else:	
-			print Error.NotWritable
+			print(Error.NotWritable)
 
 	def start(self, user_func, refresh):
 		"""
