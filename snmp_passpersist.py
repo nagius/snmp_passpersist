@@ -247,9 +247,10 @@ class PassPersist(object):
 		the start method.
 		Direct call is unnecessary.
 		"""
-		line = sys.stdin.readline().strip()
+		line = sys.stdin.readline()
 		if not line:
 			raise EOFError()
+		line = line.strip()
 
 		if 'PING' in line:
 			print("PONG")
@@ -402,8 +403,13 @@ class PassPersist(object):
 		while up.isAlive(): # Do not serve data if the Updater thread has died
 			try:
 				self.main_passpersist()
+			except EOFError:
+				break
 			except:
-				up._Thread__stop()
+				try:
+					up._Thread__stop()
+				except AttributeError: # python3 has not Thread._Thread__stop
+					pass
 				raise
 
 # vim: ts=4:sw=4:ai
