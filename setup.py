@@ -9,10 +9,10 @@ def read(fname):
 
 setup(
 	name='snmp_passpersist',
-	version='1.3.0',
+	version='2.0.0',
 	license='GPLv3',
 	description="""SNMP passpersist backend for Net-SNMP""",
-	long_description=read('README'),
+	long_description=read('README.md'),
 	keywords="snmp net-snmp",
 	author='Nicolas Agius',
 	author_email='nicolas.agius@lps-it.fr',
