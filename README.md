@@ -2,7 +2,7 @@
 
 This module is a SNMP passpersist backend for Net-SNMP.
 
-The snmp_passpersist.PassPersist class present a convenient way to creare a MIB subtree and expose it to snmp via it's passpersist protocol.
+The `snmp_passpersist.PassPersist` class present a convenient way to creare a MIB subtree and expose it to snmp via it's passpersist protocol.
 Two threads are used, one for talking with snmpd and a second that trigger the update process at a fixed interval.
 
 The keyword 'DUMP' has been added to the protocol for testing purpose.
@@ -32,7 +32,7 @@ Install the `future` package to fix the issue: `pip install future`
 Usage example: in a file /path/to/your/script.py :
 
 ```python
-!/usr/bin/python -u
+#!/usr/bin/python -u
 
 import snmp_passpersist as snmp
 
@@ -45,7 +45,7 @@ pp=snmp.PassPersist(".1.3.6.1.3.53.8")
 pp.start(update,30) # Every 30s
 ```
 
-With the folowing line in snmpd.conf :
+With the following line in Net-SNMP's snmpd.conf :
 
 ```
 pass_persist    .1.3.6.1.3.53.8.0     /path/to/your/script.py
@@ -57,15 +57,15 @@ A Real-world example is available here: https://github.com/nagius/cxm/blob/maste
 
 | Type | Helper |
 |------|--------|
-|Counter32	|add_cnt_32bit
-|Counter64	|add_cnt_64bit
-|GAUGE		|add_gau
-|INTEGER	|add_int
-|IPADDRESS	|add_ip
-|OBJECTID	|add_oid
-|OCTET		|add_oct
-|STRING		|add_str
-|TIMETICKS	|add_tt
+|Counter32	|add_cnt_32bit()
+|Counter64	|add_cnt_64bit()
+|GAUGE		|add_gau()
+|INTEGER	|add_int()
+|IPADDRESS	|add_ip()
+|OBJECTID	|add_oid()
+|OCTET		|add_oct()
+|STRING		|add_str()
+|TIMETICKS	|add_tt()
 
 
 ## Special helpers
@@ -80,7 +80,7 @@ This label is not used by Net-SNMP and is only useful for debugging with the DUM
 
 This helper allow you to add a simple OID string and give it the proper type.  For example, calling this method with
 
-```
+```python
 pp.add_oid('.1.3.6.1.2.1.47','1.1.1.1.3.1','0.0')
 ```
 
@@ -94,7 +94,7 @@ This results in the following response when we walk this OID:
 
 You can register a helper to allow the recording of value from Net-SNMP.
 
-```
+```python
 def my_setter(oid, type, value):
         print("Received %s with value %s for oid %s." % (type, value, oid))
         return True
@@ -103,6 +103,7 @@ pp.register_setter('.1.3.6.1.3.53.8.0.4', my_setter)
 ```
 
 Example for debugging : 
+
 ```
 $ /path/to/your/script.py
 set
@@ -122,6 +123,7 @@ Another example that show the usage of the 'set' feature is available in the 'ex
 
 Run the previous script in a shell and type the commands :  
 
+```
 $ /path/to/your/script.py
 PING
 PONG
@@ -140,6 +142,7 @@ getnext
 .1.3.6.1.3.53.8.0.1
 INTEGER
 123
+```
 
 All commands are typed on two lines : get<ENTER>.1.3.6.1.3.53.8.0.1<ENTER>, except PING and DUMP.
 
