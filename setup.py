@@ -13,6 +13,7 @@ setup(
 	license='GPLv3',
 	description="""SNMP passpersist backend for Net-SNMP""",
 	long_description=read('README.md'),
+	long_description_content_type="text/markdown",
 	keywords="snmp net-snmp",
 	author='Nicolas Agius',
 	author_email='nicolas.agius@lps-it.fr',
