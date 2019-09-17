@@ -2,7 +2,7 @@
 
 This module is a SNMP passpersist backend for Net-SNMP.
 
-The `snmp_passpersist.PassPersist` class present a convenient way to creare a MIB subtree and expose it to snmp via it's passpersist protocol.
+The `snmp_passpersist.PassPersist` class present a convenient way to creare a MIB subtree and expose it to snmp via its passpersist protocol.
 Two threads are used, one for talking with snmpd and a second that trigger the update process at a fixed interval.
 
 The keyword 'DUMP' has been added to the protocol for testing purpose.
@@ -10,12 +10,12 @@ The keyword 'DUMP' has been added to the protocol for testing purpose.
 
 ## Installation
 
-The easiest way is using pip : 
+The easiest way is using pip :
 ```
 pip install snmp_passpersist
 ```
 
-If you're running Python 2.x and see this error : 
+If you're running Python 2.x and see this error :
 ```
 Traceback (most recent call last):
   File "test.py", line 3, in <module>
