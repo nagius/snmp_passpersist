@@ -400,7 +400,7 @@ class PassPersist(object):
 		up.start()
 
 		# Main loop
-		while up.isAlive(): # Do not serve data if the Updater thread has died
+		while up.is_alive(): # Do not serve data if the Updater thread has died
 			try:
 				self.main_passpersist()
 			except EOFError:
