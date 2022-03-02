@@ -75,7 +75,7 @@ TypeValues = list(Type.__dict__.values())
 
 class ResponseError(ValueError):
 	"""
-	Wrong user function 
+	Wrong user function
 	"""
 
 class PassPersist(object):
@@ -236,11 +236,11 @@ class PassPersist(object):
 	def add_gau(self,oid,value,label=None):
 		"""Short helper to add a gauge value to the MIB subtree."""
 		self.add_oid_entry(oid,'GAUGE',value,label=label)
-		
-	def add_tt(self,oid,value,label=None):	
+
+	def add_tt(self,oid,value,label=None):
 		"""Short helper to add a timeticks value to the MIB subtree."""
 		self.add_oid_entry(oid,'TIMETICKS',value,label=label)
-		
+
 	def main_passpersist(self):
 		"""
 		Main function that handle SNMP's pass_persist protocol, called by
@@ -349,7 +349,7 @@ class PassPersist(object):
 		if parents:
 			return self.setter[max(parents)]
 		return self.default_setter
-	
+
 	def register_setter(self, oid, setter_func):
 		"""
 		Set reference to an user defined function for deal with set commands.
@@ -363,7 +363,7 @@ class PassPersist(object):
 
 	def set(self, oid, typevalue):
 		"""
-		Call the default or user setter function if available 
+		Call the default or user setter function if available
 		"""
 		success = False
 		type_ = typevalue.split()[0]
@@ -378,7 +378,7 @@ class PassPersist(object):
 				print(Error.NotWritable)
 			else:
 				raise RuntimeError("wrong return value: %s" % str(ret_value))
-		else:	
+		else:
 			print(Error.NotWritable)
 
 	def start(self, user_func, refresh):
@@ -400,7 +400,7 @@ class PassPersist(object):
 		up.start()
 
 		# Main loop
-		while up.isAlive(): # Do not serve data if the Updater thread has died
+		while up.is_alive(): # Do not serve data if the Updater thread has died
 			try:
 				self.main_passpersist()
 			except EOFError:
