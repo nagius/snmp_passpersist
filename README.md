@@ -15,18 +15,6 @@ The easiest way is using pip :
 pip install snmp_passpersist
 ```
 
-If you're running Python 2.x and see this error :
-```
-Traceback (most recent call last):
-  File "test.py", line 3, in <module>
-    import snmp_passpersist as snmp
-  File "/root/snmp_passpersist/snmp_passpersist.py", line 32, in <module>
-    from builtins import str
-ImportError: No module named builtins
-```
-
-Install the `future` package to fix the issue: `pip install future`
-
 ## Example
 
 Usage example: in a file /path/to/your/script.py :

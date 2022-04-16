@@ -28,10 +28,6 @@ STDOUT by use of the -u switch in the shebang line.
 
 All the methods are in the PassPersist class.
 """
-from __future__ import print_function
-from builtins import str
-from builtins import object
-
 import sys, time, threading, os
 
 __all__ = [ "Error", "ErrorValues", "Type", "TypeValues", "PassPersist" ]
