@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 
 # snmp_passpersist.py - SNMP passPersist backend for Net-SNMP
-# Copyleft 2010-2019 - Nicolas AGIUS <nicolas.agius@lps-it.fr>
+# Copyleft 2010-2022 - Nicolas AGIUS <nicolas.agius@lps-it.fr>
 
 ###########################################################################
 #
@@ -34,7 +34,7 @@ __all__ = [ "Error", "ErrorValues", "Type", "TypeValues", "PassPersist" ]
 
 __author__ = "Nicolas Agius"
 __license__ = "GPL"
-__version__ = "2.0.0"
+__version__ = "2.1.0"
 __email__ = "nicolas.agius@lps-it.fr"
 __status__ = "Production"
 
