@@ -243,10 +243,12 @@ class PassPersist(object):
 		the start method.
 		Direct call is unnecessary.
 		"""
-		line = sys.stdin.readline()
-		if not line:
-			raise EOFError()
-		line = line.strip()
+		line = ""
+		while line == "":
+			line = sys.stdin.readline()
+			if not line:
+				raise EOFError()
+			line = line.strip()
 
 		if 'PING' in line:
 			print("PONG")
